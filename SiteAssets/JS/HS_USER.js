@@ -87,6 +87,7 @@ async function showAzmayeshDetail(AzmayeshMaster) {
 
 
     function checkAdult(age) {
+        console.log(age)
         if (age.ID == xxx) {
             yyy = age.Category.Title;
         }
@@ -99,16 +100,13 @@ async function showAzmayeshDetail(AzmayeshMaster) {
     for (var i = 0; i < AzmayeshDetail.length; i++) {
         xxx = AzmayeshDetail[i].Azmayesh.Id
         AzmayeshName.find(checkAdult)
-
         table += "<tr>"
-       
         table += "<td>"
         table += AzmayeshDetail[i].Azmayesh.Code
         table += "</td>"
         table += "<td>"
         table += AzmayeshDetail[i].Azmayesh.Title
         table += "</td>"
-      
         table += "<td>"
         table += yyy
         table += "</td>"
@@ -138,8 +136,8 @@ async function showRefrenceRange(AzmayeshMaster, AzmayeshDetail) {
     for (let i = 0; i < AzmayeshDetail.length; i++) {
         // console.log(AzmayeshDetail[i].Azmayesh.Title)
         var RefrenceRange = await GetRefrenceRange(AzmayeshMaster, AzmayeshDetail[i])
-        debugger
-        console.log(RefrenceRange)
+       // debugger
+        //console.log(RefrenceRange)
         if (RefrenceRange == undefined)
             continue
         if (RefrenceRange.length > 0) {
@@ -166,11 +164,62 @@ async function showRefrenceRange(AzmayeshMaster, AzmayeshDetail) {
     $("#tableres2").append(table);
 }
 function showImage(AzmayeshMaster) {
+   
+    debugger
     $("#imgFatLevel img").remove()
     $("#imgFatLevel p").remove()
     var BMI = AzmayeshMaster[0].BMI;
     var BMIMessage="No Matching";
-  //  for (let i = 0; i < 5; i++) {
+    if(AzmayeshMaster[0].Gender=="مرد")
+    {
+        if (BMI > 0 && BMI <= 18.4) {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m1-2.jpg' alt='Girl in a jacket' width='30' height='80'>");
+            BMIMessage="کمبود وزن";
+        }
+        else
+        {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m1-1.jpg' alt='Girl in a jacket' width='30' height='80'>"); 
+        }
+        if (BMI > 18.5 && BMI <= 24.9) {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m2-2.jpg' alt='Girl in a jacket' width='30' height='80'>");
+          //  console.log("نرمال");
+           BMIMessage="نرمال";
+        }
+        else
+        {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m2-1.jpg' alt='Girl in a jacket' width='30' height='80'>"); 
+        }
+        if (BMI > 25 && BMI <= 29.9) {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m3-2.jpg' alt='Girl in a jacket' width='30' height='80'>");
+           // console.log("اضافه وزن");
+            BMIMessage="اضافه وزن";
+        }
+        else
+        {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m3-1.jpg' alt='Girl in a jacket' width='30' height='80'>"); 
+        }
+        if (BMI > 30 && BMI <= 34.9) {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m4-2.jpg' alt='Girl in a jacket' width='30' height='80'>");
+           // console.log("اضافه وزن درجه 1");
+            BMIMessage="اضافه وزن درجه 1";
+        }
+        else
+        {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m4-1.jpg' alt='Girl in a jacket' width='30' height='80'>"); 
+        }
+        if (BMI > 35 && BMI <= 39.9) {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m5-2.jpg' alt='Girl in a jacket' width='30' height='80'>");
+            //console.log("اضافه وزن درجه 2");
+            BMIMessage="اضافه وزن درجه 2";
+        }
+        else
+        {
+            $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/m5-1.jpg' alt='Girl in a jacket' width='30' height='80'>"); 
+        }
+        $("#imgFatLevel").append("<p>"+BMIMessage+"</p>");
+    }
+    else
+    {
          if (BMI > 0 && BMI <= 18.4) {
             $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/12.jpg' alt='Girl in a jacket' width='30' height='80'>");
             BMIMessage="کمبود وزن";
@@ -181,7 +230,7 @@ function showImage(AzmayeshMaster) {
         }
         if (BMI > 18.5 && BMI <= 24.9) {
             $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/22.jpg' alt='Girl in a jacket' width='30' height='80'>");
-            console.log("نرمال");
+          //  console.log("نرمال");
            BMIMessage="نرمال";
         }
         else
@@ -190,7 +239,7 @@ function showImage(AzmayeshMaster) {
         }
         if (BMI > 25 && BMI <= 29.9) {
             $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/32.jpg' alt='Girl in a jacket' width='30' height='80'>");
-            console.log("اضافه وزن");
+           // console.log("اضافه وزن");
             BMIMessage="اضافه وزن";
         }
         else
@@ -199,7 +248,7 @@ function showImage(AzmayeshMaster) {
         }
         if (BMI > 30 && BMI <= 34.9) {
             $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/42.jpg' alt='Girl in a jacket' width='30' height='80'>");
-            console.log("اضافه وزن درجه 1");
+           // console.log("اضافه وزن درجه 1");
             BMIMessage="اضافه وزن درجه 1";
         }
         else
@@ -208,7 +257,7 @@ function showImage(AzmayeshMaster) {
         }
         if (BMI > 35 && BMI <= 39.9) {
             $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/52.jpg' alt='Girl in a jacket' width='30' height='80'>");
-            console.log("اضافه وزن درجه 2");
+            //console.log("اضافه وزن درجه 2");
             BMIMessage="اضافه وزن درجه 2";
         }
         else
@@ -216,6 +265,7 @@ function showImage(AzmayeshMaster) {
             $("#imgFatLevel").append("<img src='https://portal.golrang.com/healthsystem/SiteAssets/img/51.jpg' alt='Girl in a jacket' width='30' height='80'>"); 
         }
         $("#imgFatLevel").append("<p>"+BMIMessage+"</p>");
+    }
 /*
 var BMI = form.GetControl("c_BMI").GetValue();
 if (BMI == 0 ) {
