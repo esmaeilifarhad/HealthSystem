@@ -126,6 +126,24 @@ h3 {
    /* background-image: linear-gradient(to bottom right, red, yellow); */
     background-image: linear-gradient(to bottom right, #97f7a7, #b856f1);
   }
+  #tableres3{
+    background-color: beige;
+   /* background-color: red;*/ /* For browsers that do not support gradients */
+   /* background-image: linear-gradient(to bottom right, red, yellow); */
+    background-image: linear-gradient(to bottom right, #7d16d1, #850e0e);
+  }
+  #tableres4{
+    background-color: beige;
+   /* background-color: red;*/ /* For browsers that do not support gradients */
+   /* background-image: linear-gradient(to bottom right, red, yellow); */
+    background-image: linear-gradient(to bottom right, #6ea527, #ce1b1b);
+  }
+  #tableres5{
+    background-color: beige;
+   /* background-color: red;*/ /* For browsers that do not support gradients */
+   /* background-image: linear-gradient(to bottom right, red, yellow); */
+    background-image: linear-gradient(to bottom right, #e0abd1, #b18a0d);
+  }
   #dore{
     background-color: beige;
    /* background-color: red;*/ /* For browsers that do not support gradients */

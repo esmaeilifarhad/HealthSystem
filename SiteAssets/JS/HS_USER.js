@@ -13,6 +13,11 @@ GIG_HS_AzmayeshName
 GIG_HS_AzmayeshCategory
 GIG_HS_AzmayeshPeriod
 GIG_HS_GenLookup
+
+GIG_HS_DrugAllergy 
+GIG_HS_FoodAllergy
+GIG_HS_AllergyLookup
+GIG_HS_Bimari
 */
 $(document).ready(function () {
     //-----npm initial header Request
@@ -58,11 +63,17 @@ async function ShowAzmayeshMaster() {
     $("#DrugAllergy").next().remove();
     $("#Calorie").next().remove();
     $("#Semat").next().remove();
+    $("#IdAzmayesh").next().remove();
 
     var AzmayeshMaster = await GetAzmayeshMaster();
     showAzmayeshDetail(AzmayeshMaster);
     showImage(AzmayeshMaster)
+    showFoodAllergy(AzmayeshMaster)
+    showDrugAllergy(AzmayeshMaster)
+    showBimari(AzmayeshMaster)
 
+    debugger
+    $("#IdAzmayesh").after("<span>" + AzmayeshMaster[0].Id + "</span>");
     $("#NameUser").after("<span>" + AzmayeshMaster[0].FirstName + "  " + AzmayeshMaster[0].LastName + "</span>");
     $("#PID").after("<span>" + AzmayeshMaster[0].PID + "</span>");
     $("#Weight").after("<span>" + AzmayeshMaster[0].Weight + "</span>");
@@ -87,7 +98,7 @@ async function showAzmayeshDetail(AzmayeshMaster) {
 
 
     function checkAdult(age) {
-        console.log(age)
+        //console.log(age)
         if (age.ID == xxx) {
             yyy = age.Category.Title;
         }
@@ -163,8 +174,94 @@ async function showRefrenceRange(AzmayeshMaster, AzmayeshDetail) {
     table += "</table>"
     $("#tableres2").append(table);
 }
+async function showFoodAllergy(AzmayeshMaster)
+{
+   var FoodAllergy=await  GetFoodAllergy(AzmayeshMaster)
+  // console.log(FoodAllergy)
+
+   $("#tableres3 table").remove()
+   var table = "<table class='tblH table'>"
+   table += "<tr>"
+   table += "<th>ردیف</th><th>عنوان</th>"
+   table += "</tr>"
+   for (let i = 0; i < FoodAllergy.length; i++) {
+
+       if (FoodAllergy.length > 0) {
+
+           table += "<tr>"
+           table += "<td>"
+           table += i+1
+           table += "</td>"
+           table += "<td>"
+           table += FoodAllergy[i].FoodAllergy.Title
+           table += "</td>"
+           table += "<tr>"
+
+       }
+   }
+   table += "</table>"
+   $("#tableres3").append(table);
+
+}
+async function showDrugAllergy(AzmayeshMaster)
+{
+   var DrugAllergy=await  GetDrugAllergy(AzmayeshMaster)
+   console.log(DrugAllergy)
+
+   $("#tableres4 table").remove()
+   var table = "<table class='tblH table'>"
+   table += "<tr>"
+   table += "<th>ردیف</th><th>عنوان</th>"
+   table += "</tr>"
+   for (let i = 0; i < DrugAllergy.length; i++) {
+
+       if (DrugAllergy.length > 0) {
+
+           table += "<tr>"
+           table += "<td>"
+           table += i+1
+           table += "</td>"
+           table += "<td>"
+           table += DrugAllergy[i].DrugAllergy.Title
+           table += "</td>"
+           table += "<tr>"
+
+       }
+   }
+   table += "</table>"
+   $("#tableres4").append(table);
+
+}
+async function showBimari(AzmayeshMaster)
+{
+   var Bimari=await  GetBimari(AzmayeshMaster)
+  // console.log(Bimari)
+
+   $("#tableres5 table").remove()
+   var table = "<table class='tblH table'>"
+   table += "<tr>"
+   table += "<th>ردیف</th><th>عنوان</th>"
+   table += "</tr>"
+   for (let i = 0; i < Bimari.length; i++) {
+
+       if (Bimari.length > 0) {
+
+           table += "<tr>"
+           table += "<td>"
+           table += i+1
+           table += "</td>"
+           table += "<td>"
+           table += Bimari[i].Bimari.Title
+           table += "</td>"
+           table += "<tr>"
+
+       }
+   }
+   table += "</table>"
+   $("#tableres5").append(table);
+
+}
 function showImage(AzmayeshMaster) {
-   
     debugger
     $("#imgFatLevel img").remove()
     $("#imgFatLevel p").remove()
@@ -293,7 +390,7 @@ console.log("اضافه وزن درجه 3");
 }
 //-------------------------------------------------------
 function GetAzmayeshMaster() {
-
+    debugger
     return new Promise(resolve => {
         $pnp.sp.web.lists.
             getByTitle("GIG_HS_AzmayeshMaster").
@@ -304,7 +401,7 @@ function GetAzmayeshMaster() {
             // orderBy("Modified", true).
             get().
             then(function (items) {
-
+                debugger
                 resolve(items);
             });
 
@@ -386,6 +483,51 @@ function GetRefrenceRange(AzmayeshMaster, AzmayeshDetailItem) {
                 });
         });
     }
+}
+function GetFoodAllergy(AzmayeshMaster) {
+    return new Promise(resolve => {
+        $pnp.sp.web.lists.
+            getByTitle("GIG_HS_FoodAllergy").
+            items.select("Id,Title,MasterID/Id,MasterID/Title,FoodAllergy/Id,FoodAllergy/Title").
+            expand("FoodAllergy,MasterID").
+            filter("(MasterID/Id eq " + AzmayeshMaster[0].Id + ")").
+            // orderBy("Modified", true).
+            get().
+            then(function (items) {
+               // debugger
+                resolve(items);
+            });
+    });
+}
+function GetDrugAllergy(AzmayeshMaster) {
+    return new Promise(resolve => {
+        $pnp.sp.web.lists.
+            getByTitle("GIG_HS_DrugAllergy").
+            items.select("Id,Title,MasterID/Id,MasterID/Title,DrugAllergy/Id,DrugAllergy/Title").
+            expand("DrugAllergy,MasterID").
+            filter("(MasterID/Id eq " + AzmayeshMaster[0].Id + ")").
+            // orderBy("Modified", true).
+            get().
+            then(function (items) {
+               // debugger
+                resolve(items);
+            });
+    });
+}
+function GetBimari(AzmayeshMaster) {
+    return new Promise(resolve => {
+        $pnp.sp.web.lists.
+            getByTitle("GIG_HS_Bimari").
+            items.select("Id,Title,MasterID/Id,MasterID/Title,Bimari/Id,Bimari/Title").
+            expand("Bimari,MasterID").
+            filter("(MasterID/Id eq " + AzmayeshMaster[0].Id + ")").
+            // orderBy("Modified", true).
+            get().
+            then(function (items) {
+               // debugger
+                resolve(items);
+            });
+    });
 }
 //-------------------------------------------------------
 function foramtDate(str) {
