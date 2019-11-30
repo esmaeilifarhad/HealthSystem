@@ -1,6 +1,7 @@
- /*.tblH {
-    color: black;
-}*/
+
+#WebPartWPQ2_ChromeTitle,#pageTitle{
+  display: none;
+}
 
  .tblH td,th {
     padding: 4px;
@@ -44,10 +45,7 @@ h3 {
 
 
   .main #imgFatLevel {
-      /*
-    width: 100px;
-    height: 100px;
-    background-color: red;*/
+
     position: relative;
     -webkit-animation-name: example2; /* Safari 4.0 - 8.0 */
     -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
@@ -75,10 +73,7 @@ h3 {
     100% { left:0px; top:0px;}
   }
   .main h3 {
-    /*
-  width: 100px;
-  height: 100px;
-  background-color: red;*/
+
   position: relative;
   -webkit-animation-name: moveh3; /* Safari 4.0 - 8.0 */
   -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
