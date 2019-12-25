@@ -4,6 +4,7 @@ var CurrentPID = 0;
 var xxx = 0;
 var yyy = "";
 var dore = 0;
+var _Bimary = [];
 /*
 List Name :
 GIG_HS_AzmayeshMaster
@@ -67,7 +68,7 @@ async function ShowAzmayeshMaster() {
     $("#IdAzmayesh").next().remove();
 
     var AzmayeshMaster = await GetAzmayeshMaster();
-    // debugger
+    // 
     if (AzmayeshMaster.length == 0) {
 
 
@@ -86,6 +87,7 @@ async function ShowAzmayeshMaster() {
 
 
         showAzmayeshDetail(AzmayeshMaster);
+        showAlarmBimary(AzmayeshMaster)
         showImage(AzmayeshMaster)
         showFoodAllergy(AzmayeshMaster)
         showDrugAllergy(AzmayeshMaster)
@@ -113,7 +115,7 @@ async function showAzmayeshDetail(AzmayeshMaster) {
 
     var AzmayeshName = await GetAzmayeshName();
     var AzmayeshDetail = await GetAzmayeshDetail(AzmayeshMaster);
-    showAlarmBimary(AzmayeshMaster, AzmayeshDetail);
+   // showAlarmBimary(AzmayeshMaster, AzmayeshDetail);
 
 
 
@@ -153,18 +155,18 @@ async function showAzmayeshDetail(AzmayeshMaster) {
     table += "</table>"
     $("#tableres").append(table);
 }
-async function showAlarmBimary(AzmayeshMaster, AzmayeshDetail) {
-    var BimariLookup = await GetBimariLookup();
+// async function showAlarmBimary(AzmayeshMaster, AzmayeshDetail) {
+//     var BimariLookup = await GetBimariLookup();
 
-    for (let index = 0; index < BimariLookup.length; index++) {
-        var RefrenceRange = await GetRefrenceRangeFilterAsarBarBimari(AzmayeshMaster, BimariLookup[index])
-        debugger
-    }
+//     for (let index = 0; index < BimariLookup.length; index++) {
+//         var RefrenceRange = await GetRefrenceRangeFilterAsarBarBimari(AzmayeshMaster, BimariLookup[index])
+        
+//     }
 
-}
+// }
 // async function showRefrenceRange2(AzmayeshMaster, AzmayeshDetail) {
 //      var BimariLookup = await GetBimariLookup();
-//     // debugger
+//     // 
 //     /*
 //      console.log(AzmayeshMaster)
 //      console.log(AzmayeshDetail)
@@ -222,6 +224,50 @@ async function showAlarmBimary(AzmayeshMaster, AzmayeshDetail) {
 //     table += "</table>"
 //     $("#tableres2").append(table);
 // }
+async function showAlarmBimary(AzmayeshMaster) {
+    
+    var BimariLookup = await GetBimariLookup();
+    for (let index = 0; index < BimariLookup.length; index++) {
+        var boolRes=true
+        if(BimariLookup[index].Formula==null)
+        {
+            _Bimary.push({ Title: BimariLookup[index].Title,Result:false,Alarm:BimariLookup[index].alarm}) 
+            continue
+        }
+        var result = BimariLookup[index].Formula.split(",")
+        for (let index = 0; index < result.length; index++) {
+            var AzmayeshDetail = await GetAzmayeshDetail2(result[index],AzmayeshMaster);
+            if(AzmayeshDetail.length==0)
+            {
+                boolRes=false 
+            }
+        }      
+        _Bimary.push({ Title: BimariLookup[index].Title,Result:boolRes,Alarm:BimariLookup[index].alarm }) 
+    }
+
+   
+   // console.log(_Bimary);
+    $("#tableres2 table").remove()
+    var table = "<table class='tblH table'>"
+    table += "<tr>"
+    table += "<th>بیماری</th><th>هشدار</th>"
+    table += "</tr>"
+    for (var i = 0; i < _Bimary.length; i++) {
+        if(_Bimary[i].Result==false) continue
+        table += "<tr>"
+        table += "<td>"
+        table += _Bimary[i].Title
+        table += "</td>"
+        table += "<td>"
+        table += _Bimary[i].Alarm
+        table += "</td>"
+        table += "</tr>"
+    }
+    table += "</table>"
+    $("#tableres2").append(table);
+
+}
+
 async function showFoodAllergy(AzmayeshMaster) {
     var FoodAllergy = await GetFoodAllergy(AzmayeshMaster)
     // console.log(FoodAllergy)
@@ -454,6 +500,22 @@ function GetAzmayeshDetail(AzmayeshMaster) {
             });
     });
 }
+function GetAzmayeshDetail2(filter,AzmayeshMaster) {
+
+    return new Promise(resolve => {
+        $pnp.sp.web.lists.
+            getByTitle("GIG_HS_AzmayeshDetail").
+            items.select("Id,Title,Result,Azmayesh/Title,Azmayesh/Id,Azmayesh/Code,Azmayesh/Description,MasterID/Id,MasterID/Age,MasterID/Gender").
+            expand("Azmayesh,MasterID").
+            filter("(MasterID/Id eq " + AzmayeshMaster[0].Id + ") and "+filter).
+            // orderBy("Modified", true).
+            get().
+            then(function (items) {
+
+                resolve(items);
+            });
+    });
+}
 function GetAzmayeshName() {
     return new Promise(resolve => {
         $pnp.sp.web.lists.
@@ -484,7 +546,7 @@ function GetAzmayeshPeriod() {
 }
 //آیا این بیماری خاص را دارد یا نه ؟
 function GetRefrenceRange(AzmayeshMaster, AzmayeshDetailItem, BimariLookup) {
-    debugger
+    
     if ($.isNumeric(AzmayeshDetailItem.Result) == true) {
 
         // console.log(AzmayeshMaster[0].Gender);
@@ -546,7 +608,7 @@ function GetRefrenceRange(AzmayeshMaster, AzmayeshDetailItem, BimariLookup) {
 }
 //لیست مواردی که بر روی بیماری تاثیر دارند
 function GetRefrenceRangeFilterAsarBarBimari(AzmayeshMaster, BimariLookup) {
-   // debugger
+   // 
     return new Promise(resolve => {
         $pnp.sp.web.lists.
             getByTitle("GIG_HS_RefrenceRange").
@@ -559,7 +621,7 @@ function GetRefrenceRangeFilterAsarBarBimari(AzmayeshMaster, BimariLookup) {
             // orderBy("Modified", true).
             get().
             then(function (items) {
-               // debugger
+               // 
                // console.log(items)
                 resolve(items);
             });
@@ -631,7 +693,7 @@ function GetBimariLookup() {
     return new Promise(resolve => {
         $pnp.sp.web.lists.
             getByTitle("GIG_HS_BimariLookup").
-            items.select("Id,Title").
+            items.select("Id,Title,Formula,alarm").
             // expand("FoodAllergy,MasterID").
             //filter("(MasterID/Id eq " + AzmayeshMaster[0].Id + ")").
             // orderBy("Modified", true).
@@ -692,5 +754,10 @@ function foramtDate(str) {
 }
 function splitString(str) {
     return str.split(";#")
+}
+function SeparateThreeDigits(str) {
+    var x = parseInt(str);
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // return parseInt(str);
 }
 //-----------------------
